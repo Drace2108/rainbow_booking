@@ -1,4 +1,4 @@
-import './App.css';
+import '../App.css';
 import { useEffect, useState } from 'react';
 
 function Schedule() {
@@ -33,18 +33,22 @@ function Schedule() {
       },
       body: mode === "add booking" ? JSON.stringify({ userId, date, time }) : null
     })
-    .then(fetchBookings)
-    .catch(error => console.error(`Error ${mode === "add booking" ? "making" : "deleting"} booking:`, error));
+      .then(fetchBookings)
+      .catch(error => console.error(`Error ${mode === "add booking" ? "making" : "deleting"} booking:`, error));
   };
 
   const formatTime = (rowIndex) => `${String(rowIndex).padStart(2, '0')}:00`;
 
-  const formatDate = (colIndex) => new Date(today.getTime() + (colIndex * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
+  const formatDate = (colIndex) => {
+    const date = new Date(today.getTime() + (colIndex * 24 * 60 * 60 * 1000));
+    return date.toISOString().split('T')[0]; // Format to yyyy-mm-dd
+  };
 
   const isAvailableToBook = (colIndex, rowIndex) => {
     const time = formatTime(rowIndex);
     const date = formatDate(colIndex);
-    return bookings.some(booking => booking.date === date && booking.time === time);
+    console.log(date, time)
+    return bookings.some(booking => booking.date == date && booking.time == time);
   };
 
   const findDetails = (colIndex, rowIndex) => {
@@ -56,10 +60,10 @@ function Schedule() {
 
   return (
     <div className="App" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
-      <button onClick={() => setMode(mode === "add booking" ? "delete booking" : "add booking")} style={{ marginBottom: '20px' }}>
+      <button onClick={() => setMode(mode === "add booking" ? "delete booking" : "add booking")} style={{ margin: '20px 0' }}>
         Mode: {mode}
       </button>
-      <table style={{ width: '100%', textAlign: 'center' }}>
+      <table style={{ width: '70%', textAlign: 'center' }}>
         <thead>
           <tr>
             <th>Time</th>
